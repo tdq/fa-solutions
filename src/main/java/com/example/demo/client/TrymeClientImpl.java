@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpGraphQlClient;
@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-class TrymeClientImpl implements TrymeClient {
+class TrymeClientImpl implements Client {
 
     private final WebClient webClient;
     private final HttpGraphQlClient graphQlClient;

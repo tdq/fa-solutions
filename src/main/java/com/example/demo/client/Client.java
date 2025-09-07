@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import reactor.core.publisher.Mono;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  *
  */
-public interface TrymeClient {
+public interface Client {
     /**
      *
      * @param query

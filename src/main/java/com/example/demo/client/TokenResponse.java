@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

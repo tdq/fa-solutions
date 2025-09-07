@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;

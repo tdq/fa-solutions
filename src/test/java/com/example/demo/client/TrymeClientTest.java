@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class TrymeClientTest {
 
     @Autowired
-    private TrymeClient client;
+    private Client client;
 
     @Test
     public void test_FetchPortfolio3() {

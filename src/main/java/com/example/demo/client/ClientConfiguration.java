@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-class TrymeConfiguration {
+class ClientConfiguration {
 
     @Value("${tryme.username}")
     private String username;
@@ -21,7 +21,7 @@ class TrymeConfiguration {
     private String graphqlPath;
 
     @Bean
-    TrymeClient trymeClient(WebClient.Builder builder, TokenService tokenService) {
+    Client client(WebClient.Builder builder, TokenService tokenService) {
         return new TrymeClientImpl(builder, tokenService, graphqlPath);
     }
 

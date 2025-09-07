@@ -1,4 +1,4 @@
-package com.example.demo.rest;
+package com.example.demo.client;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
