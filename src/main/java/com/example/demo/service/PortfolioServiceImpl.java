@@ -3,11 +3,14 @@ package com.example.demo.service;
 import com.example.demo.client.Client;
 import com.example.demo.service.dto.Portfolio;
 import jakarta.annotation.Nullable;
+import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.client.ClientResponseField;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 class PortfolioServiceImpl implements PortfolioService {
     private Client client;
@@ -40,7 +43,8 @@ class PortfolioServiceImpl implements PortfolioService {
                  }
                 """;
 
-        final Map<String, Object> params = Map.of("id", portfolioId);
+        final Map<String, Object> params = new HashMap<>();
+        params.put("id", portfolioId);
 
         if(startDate != null) {
             params.put("from", startDate.toString());
@@ -50,13 +54,14 @@ class PortfolioServiceImpl implements PortfolioService {
             params.put("to", endDate.toString());
         }
 
-        // TODO check that current user is allowed to see requested portfolio
-        return client.query(query, params).map(response -> {
+        return client.query(query, params).flatMap(response -> {
+            if(!response.getErrors().isEmpty()) {
+                return Mono.error(new RuntimeException(response.getErrors().stream().map(ResponseError::getMessage).collect(Collectors.joining())));
+            }
+
             ClientResponseField field = response.field("portfolio");
 
-            // TODO check errors
-
-            return field.toEntity(Portfolio.class);
+            return Mono.justOrEmpty(field.toEntity(Portfolio.class));
         });
     }
 }

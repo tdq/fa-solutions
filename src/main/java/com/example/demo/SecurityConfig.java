@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults()); // enables default login page
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
