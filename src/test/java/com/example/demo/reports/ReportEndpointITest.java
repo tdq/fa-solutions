@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 @AutoConfigureWebTestClient
 @Import(TestSecurityConfig.class)
 @ActiveProfiles("test")
-public class ReportEndpointIT {
+public class ReportEndpointITest {
     @Autowired
     private WebTestClient testClient;
 

@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Map;
 
 @SpringBootTest
-public class TrymeClientIT {
+public class TrymeClientITest {
 
     @Autowired
     private Client client;

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 @SpringBootTest
-public class PortfolioServiceIT {
+public class PortfolioServiceITest {
 
     @Autowired
     private PortfolioService service;
