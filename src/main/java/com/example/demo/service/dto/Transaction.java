@@ -3,6 +3,7 @@ package com.example.demo.service.dto;
 import java.time.LocalDate;
 
 public record Transaction(
+        String portfolioShortName,
         String securityName,
         Security security,
         String currencyCode,

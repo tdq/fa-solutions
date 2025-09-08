@@ -1,10 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.client.Client;
-import com.example.demo.service.dto.Portfolio;
+import com.example.demo.service.dto.Transaction;
 import jakarta.annotation.Nullable;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.client.ClientResponseField;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -20,25 +21,23 @@ class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Mono<Portfolio> getPortfolio(long portfolioId, @Nullable LocalDate startDate, @Nullable LocalDate endDate) {
+    public Flux<Transaction> getTransactions(long portfolioId, @Nullable LocalDate startDate, @Nullable LocalDate endDate) {
         final var query =
                 """
                  query report($id: Long!, $from:String, $to: String) {
-                    portfolio(id: $id) {
-                        shortName,
-                        transactions(startDate: $from, endDate: $to) {
-                            securityName,
-                            security {
-                                isinCode
-                            },
-                            currencyCode,
-                            amount,
-                            unitPrice,
-                            tradeAmount,
-                            typeName,
-                            transactionDate,
-                            settlementDate
-                        }
+                    transactions(portfolioId: $id, startDate: $from, endDate: $to) {
+                        portfolioShortName,
+                        securityName,
+                        security {
+                            isinCode
+                        },
+                        currencyCode,
+                        amount,
+                        unitPrice,
+                        tradeAmount,
+                        typeName,
+                        transactionDate,
+                        settlementDate
                     }
                  }
                 """;
@@ -54,14 +53,14 @@ class PortfolioServiceImpl implements PortfolioService {
             params.put("to", endDate.toString());
         }
 
-        return client.query(query, params).flatMap(response -> {
+        return client.query(query, params).flatMapMany(response -> {
             if(!response.getErrors().isEmpty()) {
                 return Mono.error(new RuntimeException(response.getErrors().stream().map(ResponseError::getMessage).collect(Collectors.joining())));
             }
 
-            ClientResponseField field = response.field("portfolio");
+            ClientResponseField field = response.field("transactions");
 
-            return Mono.justOrEmpty(field.toEntity(Portfolio.class));
+            return Flux.fromIterable(field.toEntityList(Transaction.class));
         });
     }
 }

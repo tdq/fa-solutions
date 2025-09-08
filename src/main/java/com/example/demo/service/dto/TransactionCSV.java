@@ -1,7 +1,7 @@
 package com.example.demo.service.dto;
 
 public record TransactionCSV(
-        String shortName,
+        String portfolioShortName,
         String securityName,
         String isinCode,
         String currencyCode,
@@ -11,9 +11,9 @@ public record TransactionCSV(
         String typeName,
         String transactionDate,
         String settlementDate) {
-    public static TransactionCSV fromTransaction(String shortName, Transaction transaction) {
+    public static TransactionCSV fromTransaction(Transaction transaction) {
         return new TransactionCSV(
-                shortName,
+                transaction.portfolioShortName(),
                 transaction.securityName(),
                 transaction.security() != null ? transaction.security().isinCode() : "",
                 transaction.currencyCode(),

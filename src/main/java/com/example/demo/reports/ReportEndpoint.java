@@ -10,7 +10,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,18 +43,17 @@ public class ReportEndpoint {
             HttpServletResponse response) {
         Objects.requireNonNull(portfolioId, "Portfolio ID must be provided");
 
-        // Service graphql endpoint is not allowing to fetch data as a stream. Have to fetch all data before processing
-        // Also it allows to process errors before streaming data
-        final var portfolio = service.getPortfolio(portfolioId, from, to).block();
-        final var rows = portfolio.transactions().stream().map (transaction -> TransactionCSV.fromTransaction(portfolio.shortName(), transaction));
+        final var transactions = service.getTransactions(portfolioId, from, to).toStream();
 
-        final var body = rows.map(row -> {
-                    try {
-                        return mapper.writer(schema.withoutHeader()).writeValueAsString(row);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        final var body = transactions.map(transaction -> {
+            final var csvTransaction = TransactionCSV.fromTransaction(transaction);
+
+            try {
+                return mapper.writer(schema.withoutHeader()).writeValueAsString(csvTransaction);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=portfolio_transactions.csv");
 
