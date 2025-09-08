@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Map;
 
 @SpringBootTest
-public class TrymeClientTest {
+public class TrymeClientIT {
 
     @Autowired
     private Client client;
@@ -24,5 +24,6 @@ public class TrymeClientTest {
         final var response = client.query(query, Map.of()).block();
 
         Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.field("portfolio").getValue());
     }
 }

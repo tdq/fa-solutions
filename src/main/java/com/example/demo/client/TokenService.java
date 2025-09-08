@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- *
+ * Token service stores access token
  */
 class TokenService {
     private static final int EXPIRE_MARGIN_IN_SECONDS = 5;
@@ -33,8 +33,9 @@ class TokenService {
     }
 
     /**
+     * Provides access token
      *
-     * @return
+     * @return access token
      */
     Mono<String> getAccessToken() {
         if (tokenResponse != null && Instant.now().isBefore(tokenExpiry)) {
@@ -67,8 +68,6 @@ class TokenService {
                         .with("grant_type", "password"))
                 .retrieve()
                 .bodyToMono(TokenResponse.class);
-
-        // TODO process on login error
     }
 
     private Mono<TokenResponse> refreshToken(String refreshToken) {
@@ -79,8 +78,6 @@ class TokenService {
                         .with("grant_type", "refresh_token"))
                 .retrieve()
                 .bodyToMono(TokenResponse.class);
-
-        // TODO process on refresh error properly
     }
 
     private String updateTokenAndReturn(TokenResponse response) {

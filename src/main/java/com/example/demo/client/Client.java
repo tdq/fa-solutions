@@ -6,14 +6,14 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 /**
- *
+ * Client interface for accessing GraphQL
  */
 public interface Client {
     /**
-     *
-     * @param query
-     * @param variables
-     * @return
+     * Execute query on GraphQL
+     * @param query String query
+     * @param variables map of variables for query
+     * @return reactive response
      */
     Mono<ClientGraphQlResponse> query(String query, Map<String, Object> variables);
 }

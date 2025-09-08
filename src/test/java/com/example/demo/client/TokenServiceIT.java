@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class TokenServiceTest {
+public class TokenServiceIT {
 
     @Autowired
     private TokenService tokenService;
@@ -16,5 +16,6 @@ public class TokenServiceTest {
         final var accessToken = tokenService.getAccessToken().block();
 
         Assertions.assertNotNull(accessToken);
+        Assertions.assertFalse(accessToken.isEmpty(), "Access token is empty");
     }
 }
