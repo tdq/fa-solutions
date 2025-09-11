@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 public class ReportEndpoint {
@@ -43,17 +45,19 @@ public class ReportEndpoint {
             HttpServletResponse response) {
         Objects.requireNonNull(portfolioId, "Portfolio ID must be provided");
 
-        final var transactions = service.getTransactions(portfolioId, from, to).toStream();
+        final var transactions = service.getTransactions(portfolioId, from, to).collectList().block();
 
-        final var body = transactions.map(transaction -> {
-            final var csvTransaction = TransactionCSV.fromTransaction(transaction);
+        final var body = Optional.ofNullable(transactions).orElse(Collections.emptyList())
+                .stream()
+                .map(transaction -> {
+                    final var csvTransaction = TransactionCSV.fromTransaction(transaction);
 
-            try {
-                return mapper.writer(schema.withoutHeader()).writeValueAsString(csvTransaction);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                    try {
+                        return mapper.writer(schema.withoutHeader()).writeValueAsString(csvTransaction);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=portfolio_transactions.csv");
 
