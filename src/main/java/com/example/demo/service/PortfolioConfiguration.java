@@ -13,7 +13,7 @@ class PortfolioConfiguration {
     }
 
     @Bean
-    CheckPortfolioAccess checkPortfolioAccess() {
-        return new CheckPortfolioAccess();
+    CheckPortfolioAccess checkPortfolioAccess(Client client) {
+        return new CheckPortfolioAccess(client);
     }
 }

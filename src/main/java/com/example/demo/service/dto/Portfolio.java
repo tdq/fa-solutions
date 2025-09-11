@@ -1,8 +1,10 @@
 package com.example.demo.service.dto;
 
+import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
 public record Portfolio(
-        String shortName,
-        List<Transaction> transactions) {
+        @Nonnull String shortName,
+        @Nonnull List<Transaction> transactions) {
 }

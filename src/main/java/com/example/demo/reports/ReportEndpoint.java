@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class ReportEndpoint {
@@ -45,10 +43,12 @@ public class ReportEndpoint {
             HttpServletResponse response) {
         Objects.requireNonNull(portfolioId, "Portfolio ID must be provided");
 
-        final var transactions = service.getTransactions(portfolioId, from, to).collectList().block();
+        if(from != null && to != null && to.isBefore(from)) {
+            throw new IllegalArgumentException("From must be before or the same date as To");
+        }
 
-        final var body = Optional.ofNullable(transactions).orElse(Collections.emptyList())
-                .stream()
+        final var transactions = service.getTransactions(portfolioId, from, to);
+        final var body = transactions
                 .map(transaction -> {
                     final var csvTransaction = TransactionCSV.fromTransaction(transaction);
 
@@ -61,6 +61,6 @@ public class ReportEndpoint {
 
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=portfolio_transactions.csv");
 
-        return Flux.fromStream(body).startWith(String.join(String.valueOf(schema.getColumnSeparator()), schema.getColumnNames()) + "\n");
+        return body.startWith(String.join(String.valueOf(schema.getColumnSeparator()), schema.getColumnNames()) + "\n");
     }
 }

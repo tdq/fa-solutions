@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 class PortfolioServiceImpl implements PortfolioService {
-    private Client client;
+    private final Client client;
 
     public PortfolioServiceImpl(Client client) {
         this.client = client;
