@@ -7,11 +7,6 @@ Authentication is enabled via Spring Security with a basic in-memory user.
 
 To access the endpoints, you must authenticate with HTTP Basic Authentication.
 
-**Default credentials:**
-
-- **Username:** `user`
-- **Password:** `password`
-
 ## REST Endpoint
 
 ### `GET /report`
@@ -49,6 +44,8 @@ tryme.username=myuser
 tryme.password=mypassword
 tryme.auth.path=https://example.com/auth
 tryme.graphql.path=https://example.com/graphql
+report.api.user=some_user
+report.api.password=some_password
 ```
 
 #### Example (Environment Variables)
@@ -57,6 +54,8 @@ export USERNAME=myuser
 export PASSWORD=mypassword
 export AUTH_PATH=https://example.com/auth
 export GRAPHQL_PATH=https://example.com/graphql
+API_USER=user
+API_PASSWORD=password
 ```
 
 ## Running the Application
