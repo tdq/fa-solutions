@@ -1,5 +1,7 @@
 package com.example.demo.client;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -10,6 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Token service stores access token
  */
+@Service
 class TokenService {
     private static final int EXPIRE_MARGIN_IN_SECONDS = 5;
 
@@ -22,7 +25,11 @@ class TokenService {
     private volatile Instant tokenExpiry = Instant.EPOCH;
     private final AtomicReference<Mono<String>> ongoingFetchTokenRef = new AtomicReference<>();
 
-    TokenService(WebClient.Builder builder, String username, String password, String basepath) {
+    TokenService(
+            WebClient.Builder builder,
+            @Value("${tryme.username}") String username,
+            @Value("${tryme.password}") String password,
+            @Value("${tryme.auth.path}") String basepath) {
         this.username = username;
         this.password = password;
         this.basepath = basepath;

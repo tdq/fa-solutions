@@ -2,14 +2,15 @@ package com.example.demo.service;
 
 import com.example.demo.client.Client;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This class is done just for fun to demonstrate how ABAC can be used here
  */
+@Component
 class CheckPortfolioAccess {
     private final Client client;
 

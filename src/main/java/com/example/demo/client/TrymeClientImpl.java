@@ -1,20 +1,26 @@
 package com.example.demo.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+@Service
 class TrymeClientImpl implements Client {
 
     private final WebClient webClient;
     private final HttpGraphQlClient graphQlClient;
     private final TokenService tokenService;
 
-    TrymeClientImpl(WebClient.Builder builder, TokenService tokenService, String basepath) {
+    TrymeClientImpl(
+            WebClient.Builder builder,
+            TokenService tokenService,
+            @Value("${tryme.graphql.path}") String basepath) {
         this.webClient = builder
                 .baseUrl(basepath)
                 .build();

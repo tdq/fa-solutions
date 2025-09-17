@@ -5,6 +5,7 @@ import com.example.demo.service.dto.Transaction;
 import jakarta.annotation.Nullable;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.client.ClientResponseField;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 class PortfolioServiceImpl implements PortfolioService {
     private final Client client;
 
