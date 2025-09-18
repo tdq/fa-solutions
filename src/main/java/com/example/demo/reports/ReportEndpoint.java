@@ -33,10 +33,6 @@ public class ReportEndpoint {
             HttpServletResponse response) {
         Objects.requireNonNull(portfolioId, "Portfolio ID must be provided");
 
-        if(from != null && to != null && to.isBefore(from)) {
-            throw new IllegalArgumentException("From must be before or the same date as To");
-        }
-
         final var transactions = service.getTransactions(portfolioId, from, to);
         final var body = transactions.map(TransactionCSV::fromTransaction);
 

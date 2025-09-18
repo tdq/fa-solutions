@@ -18,6 +18,8 @@ public interface PortfolioService {
      * @param startDate optional start date
      * @param endDate optional end date
      * @return reactive stream of {@link Transaction}
+     *
+     * @throws IllegalArgumentException if end date is before start date
      */
     @PreAuthorize("@checkPortfolioAccess.canGetInformation(authentication, #portfolioId)")
     Flux<Transaction> getTransactions(long portfolioId, @Nullable LocalDate startDate, @Nullable LocalDate endDate);

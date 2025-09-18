@@ -1,20 +1,28 @@
 package com.example.demo.client;
 
+import jakarta.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.Objects;
 
+@Service
 class TrymeClientImpl implements Client {
 
     private final WebClient webClient;
     private final HttpGraphQlClient graphQlClient;
     private final TokenService tokenService;
 
-    TrymeClientImpl(WebClient.Builder builder, TokenService tokenService, String basepath) {
+    TrymeClientImpl(
+            WebClient.Builder builder,
+            TokenService tokenService,
+            @Value("${tryme.graphql.path}") String basepath) {
         this.webClient = builder
                 .baseUrl(basepath)
                 .build();
@@ -25,7 +33,9 @@ class TrymeClientImpl implements Client {
     }
 
     @Override
-    public Mono<ClientGraphQlResponse> query(String query, Map<String, Object> variables) {
+    public Mono<ClientGraphQlResponse> query(@Nonnull String query, Map<String, Object> variables) {
+        Objects.requireNonNull(query, "Please provide query");
+
         return tokenService.getAccessToken()
                 .flatMap(token -> this.graphQlClient
                         .mutate()
