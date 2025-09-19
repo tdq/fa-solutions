@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.client.Client;
 import com.example.demo.service.dto.Transaction;
 import jakarta.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.graphql.ResponseError;
 import org.springframework.graphql.client.ClientResponseField;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Service
 class PortfolioServiceImpl implements PortfolioService {
+    private static final Logger log = LoggerFactory.getLogger(PortfolioServiceImpl.class);
+
     private final Client client;
 
     public PortfolioServiceImpl(Client client) {
@@ -63,7 +67,10 @@ class PortfolioServiceImpl implements PortfolioService {
 
         return client.query(query, params).flatMapMany(response -> {
             if(!response.getErrors().isEmpty()) {
-                return Mono.error(new RuntimeException(response.getErrors().stream().map(ResponseError::getMessage).collect(Collectors.joining())));
+                final var errorMessage = response.getErrors().stream().map(ResponseError::getMessage).collect(Collectors.joining());
+
+                log.error(errorMessage);
+                return Mono.error(new RuntimeException(errorMessage));
             }
 
             ClientResponseField field = response.field("transactions");

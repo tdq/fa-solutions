@@ -1,5 +1,7 @@
 package com.example.demo.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -14,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 class TokenService {
+    private static final Logger log = LoggerFactory.getLogger(TokenService.class);
     private static final int EXPIRE_MARGIN_IN_SECONDS = 5;
 
     private final String username;
@@ -74,7 +77,12 @@ class TokenService {
                         .with("password", password)
                         .with("grant_type", "password"))
                 .retrieve()
-                .bodyToMono(TokenResponse.class);
+                .bodyToMono(TokenResponse.class)
+                .onErrorResume(error -> {
+                    log.error("Error on login", error);
+
+                    return Mono.error(error);
+                });
     }
 
     private Mono<TokenResponse> refreshToken(String refreshToken) {
@@ -84,7 +92,12 @@ class TokenService {
                         .with("refresh_token", refreshToken)
                         .with("grant_type", "refresh_token"))
                 .retrieve()
-                .bodyToMono(TokenResponse.class);
+                .bodyToMono(TokenResponse.class)
+                .onErrorResume(error -> {
+                    log.error("Error on token refresh", error);
+
+                    return Mono.error(error);
+                });
     }
 
     private String updateTokenAndReturn(TokenResponse response) {
