@@ -53,7 +53,7 @@ public class ReportEndpointITest {
                 .getResponseBody();
 
         Assertions.assertNotNull(body);
-        Assertions.assertTrue(body.contains("portfolioShortName,securityName,isinCode,currencyCode,amount,unitPrice,tradeAmount,typeName,transactionDate,settlementDate"));
+        Assertions.assertTrue(body.contains("Portfolio's shortName,Security name,Security ISIN code,Transaction's currency code,Amount,Unit price,Trade amount,Type name,Transaction date,Settlement date"));
         Assertions.assertTrue(body.contains("123,Security1,DE123,EUR,12,2.5,12,Equity,2025-01-01,2025-01-01"));
         Assertions.assertTrue(body.contains("123,Security2,DE456,EUR,10,2.0,10,Equity,2025-01-02,2025-01-02"));
     }
