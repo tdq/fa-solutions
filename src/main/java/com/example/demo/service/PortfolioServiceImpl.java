@@ -26,6 +26,8 @@ class PortfolioServiceImpl implements PortfolioService {
     public Flux<Transaction> getTransactions(long portfolioId, @Nullable LocalDate startDate, @Nullable LocalDate endDate) {
         if(startDate != null && endDate != null && endDate.isBefore(startDate)) {
             throw new IllegalArgumentException("From must be before or the same date as To");
+        } else if((startDate != null && endDate == null) || (endDate != null && startDate == null)) {
+            throw new IllegalArgumentException("Both or none of date ranges must be specified");
         }
 
         final var query =
