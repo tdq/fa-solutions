@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +18,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @Profile("!test")
 public class SecurityConfig {
+
+    @Value("${report.api.user}")
+    private String username;
+
+    @Value("${report.api.password}")
+    private String password;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,8 +39,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password(encoder.encode("password"))
+                User.withUsername(username)
+                        .password(encoder.encode(password))
                         .roles("USER")
                         .build()
         );
