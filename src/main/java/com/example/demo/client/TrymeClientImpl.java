@@ -1,6 +1,8 @@
 package com.example.demo.client;
 
 import jakarta.annotation.Nonnull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpGraphQlClient;
@@ -14,6 +16,7 @@ import java.util.Objects;
 
 @Service
 class TrymeClientImpl implements Client {
+    private static final Logger log = LoggerFactory.getLogger(TrymeClientImpl.class);
 
     private final WebClient webClient;
     private final HttpGraphQlClient graphQlClient;
@@ -43,6 +46,10 @@ class TrymeClientImpl implements Client {
                         .build()
                         .document(query)
                         .variables(variables)
-                        .execute());
+                        .execute()).onErrorResume(error -> {
+                            log.error("Error on GraphQL client", error);
+
+                            return Mono.error(error);
+                });
     }
 }
