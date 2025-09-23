@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.client.Client;
 import com.example.demo.service.dto.Transaction;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +24,8 @@ class PortfolioServiceImpl implements PortfolioService {
 
     private final Client client;
 
-    public PortfolioServiceImpl(Client client) {
-        this.client = client;
+    public PortfolioServiceImpl(@Nonnull Client client) {
+        this.client = Objects.requireNonNull(client);
     }
 
     @Override

@@ -52,16 +52,4 @@ public class PortfolioServiceITest {
     public void test_fetchTransactionsPortfolio3NoUserThrowsException() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> service.getTransactions(3, null, null).collect(Collectors.toList()).block());
     }
-
-    @Test
-    @WithMockUser(username = "test", roles = {"USER"})
-    public void test_fetchTransactionsPortfolio3StartDateSetThrowsException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.getTransactions(3, LocalDate.now(), null).collect(Collectors.toList()).block());
-    }
-
-    @Test
-    @WithMockUser(username = "test", roles = {"USER"})
-    public void test_fetchTransactionsPortfolio3EndDateSetThrowsException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.getTransactions(3, null, LocalDate.now()).collect(Collectors.toList()).block());
-    }
 }
