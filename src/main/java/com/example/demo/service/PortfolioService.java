@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.service.annotations.CanAccessPortfolio;
 import com.example.demo.service.dto.Transaction;
 import jakarta.annotation.Nullable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ public interface PortfolioService {
      *
      * @throws IllegalArgumentException if end date is before start date
      */
-    @PreAuthorize("@checkPortfolioAccess.canGetInformation(authentication, #portfolioId)")
+    @CanAccessPortfolio
     Flux<Transaction> getTransactions(long portfolioId, @Nullable LocalDate startDate, @Nullable LocalDate endDate);
 }
 
